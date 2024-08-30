@@ -21,12 +21,22 @@ app.post('/todo',async (req, res) => {
         return 
     }
 
-    
-
+    await Todo.create({
+        title: payload.title,
+        description: payload.description,
+        done: false
+    })
+    res.json({
+        msg: "Todo Added"
+    })
 
 })
 
-app.get('/todo',(req,res) => {
+app.get('/todo',async (req,res) => {
+
+    const all_todo=await Todo.find();
+    
+    res.json(all_todo)
 
 })
 
@@ -35,15 +45,23 @@ app.put('/completed',async (req,res)=>{
 
     const id_check=id_check_Schema.safeParse(id)
 
-    if(id_check.success){
-        res.json({
-            msg: "Valid id "
-        })
-    }else{
+    if(!id_check.success){
         res.status(403).json({
             msg:"Invalid id"
         })
+        return 
     }
+
+    await Todo.updateMany({
+        _id: id
+    },{
+        $set:{
+            done: true
+        }
+    })
+    res.json({
+        msg:"Done the task"
+    })
 
 })
 
