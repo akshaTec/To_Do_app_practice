@@ -2,12 +2,13 @@ const express = require("express")
 const app= express()
 const {todo_check_Schema, id_check_Schema} = require("./types")
 const {Todo} = require("./db")
+const cors = require("cors")
 
 const PORT = 3000
 
 
 app.use(express.json())
-
+app.use(cors())
 
 app.post('/todo',async (req, res) => {
     
@@ -36,7 +37,9 @@ app.get('/todo',async (req,res) => {
 
     const all_todo=await Todo.find();
     
-    res.json(all_todo)
+    res.json({
+        todos: all_todo
+    })
 
 })
 
